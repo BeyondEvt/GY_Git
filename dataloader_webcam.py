@@ -434,6 +434,11 @@ class DataWriter:
         time.sleep(0.2)
         return not self.Q.empty()
 
+    def running2(self):
+        # indicate that the thread is still running
+        time.sleep(0.002)
+        return not self.Q.empty()
+
     def save(self, boxes, scores, hm_data, pt1, pt2, orig_img, im_name):
         # save next frame in the queue
         self.Q.put((boxes, scores, hm_data, pt1, pt2, orig_img, im_name))

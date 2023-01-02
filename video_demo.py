@@ -72,6 +72,15 @@ if __name__ == "__main__":
         start_time = getTime()
         with torch.no_grad():
             (inps, orig_img, im_name, boxes, scores, pt1, pt2) = det_processor.read()
+
+            print('This is inps', inps)
+            print('This is pt1', pt1)
+            print("This is boxes", boxes)
+            boxes = boxes[2]
+            boxes = boxes.unsqueeze(0)
+
+
+
             if orig_img is None:
                 break
             if boxes is None or boxes.nelement() == 0:
