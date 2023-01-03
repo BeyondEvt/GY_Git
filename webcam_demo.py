@@ -26,6 +26,7 @@ from pPose_nms import write_json
 args = opt
 args.dataset = 'coco'
 
+q = []  # (存放30帧实时数据)
 
 def loop():
     n = 0
@@ -117,32 +118,139 @@ if __name__ == "__main__":
                 ckpt_time, post_time = getTime(ckpt_time)
                 runtime_profile['pn'].append(post_time)
 
-                writer2 = DataWriter(args.save_video, save_path, cv2.VideoWriter_fourcc(*'XVID'), fps, frameSize).start()
-                if boxes is None or boxes.nelement() == 0:
-                    writer2.save(None, None, None, None, None, orig_img, im_name.split('/')[-1])
-                    continue
-                writer2.save(boxes, scores, hm, pt1, pt2, orig_img, im_name.split('/')[-1])
-                while (writer2.running2()):
+
+                while (writer.running2()):
                     pass
-                writer2.stop()
-                final = writer2.results()
-                # print(final)
-                keypoints = final[0]['result'][0]['keypoints']
-                point_6 = keypoints[5].numpy()
-                point_8 = keypoints[7].numpy()
-                point_10 = keypoints[9].numpy()
-                vector_up = point_6 - point_8
-                vector_down = point_10 - point_8
-                angle_ = np.dot(vector_up, vector_down)/ \
-                         (np.linalg.norm(vector_up) * np.linalg.norm(vector_down))
-                angle_land = np.dot(vector_up, [0, 1])/ \
-                         (np.linalg.norm(vector_up))
-                if abs(angle_ - 0) > 0.2:
-                    print("你的手臂不是直角")
-                else:
-                    print("直角")
-                if abs(angle_land - 0) > 0.2:
-                    print("手臂不够平")
+                time.sleep(0.02)
+                result_ = writer.results()
+                writer.__init__()
+
+
+                if len(result_) == 1:
+                    keypoints = result_[-1]['result'][0]['keypoints']
+                    point_6 = keypoints[5].numpy()
+                    point_8 = keypoints[7].numpy()
+                    point_10 = keypoints[9].numpy()
+                    vector_up = point_6 - point_8
+                    vector_down = point_10 - point_8
+                    angle_ = np.dot(vector_up, vector_down) / \
+                             (np.linalg.norm(vector_up) * np.linalg.norm(vector_down))
+                    angle_land = np.dot(vector_up, [0, -1]) / \
+                                 (np.linalg.norm(vector_up))
+
+                    standard_num = -1/2
+
+                    ### 正面左手下方
+                    # 左手外侧
+                    if vector_up[0] < 0:
+                        if np.arccos(angle_land) - np.arccos(standard_num) > np.pi/18:
+                            print("左手向外角度适当减小")
+                            index = 1
+                        elif np.arccos(angle_land) - np.arccos(standard_num) < -np.pi/18:
+                            print("左手向外角度适当增大")
+                            index = 2
+                        else:
+                            print("ok")
+                            index = 3
+                    # 左手内侧
+                    if vector_up[0] >= 0:
+                        if np.arccos(angle_land) - np.arccos(standard_num) > np.pi/18:
+                            print("左手往外伸")
+                            index = 4
+                        elif np.arccos(angle_land) - np.arccos(standard_num) < -np.pi/18:
+                            print("左手往里收")
+                            index = 5
+                        else:
+                            print("ok")
+                            index = 6
+
+                    ## 动态评估---区间来回变化(与上下标准比较)
+
+                    if len(q) < 30:
+                        q.append(index)
+
+                    if len(q) == 30:
+                        q.pop(0)
+                        q.append(index)
+
+                    std_down_side = True # 外侧
+                    std_down_value = 0.5 # cos值
+                    ## 与下标准比较
+                    # 判断幅度是否过大
+                    # 下标准在外侧
+                    if std_down_side:
+                        if q.count(2) >= 8:
+                            print("左手摆动下幅度减小*****************************************")
+                            q.__init__()
+
+                    # 判断幅度是否过小
+                    if len(q) == 30:
+                         if q.count(3) <= 5:
+                            print("左手摆动下幅度增大￥￥￥￥￥￥￥￥￥￥￥￥￥￥￥￥￥￥￥￥￥￥￥")
+                            q.__init__()
+
+
+
+
+
+
+
+                    # 最大角和最小角的评估
+
+
+
+
+
+
+
+
+
+
+                    #     else:
+                    #         print("直角")
+                    #     if abs(angle_land - 0) > 0.2:
+                    #         print("手臂不够平")
+                    #
+                    #
+                    # if abs(angle_ - 0) > 0.2:
+                    #     print("你的手臂不是直角")
+                    # else:
+                    #     print("直角")
+                    # if abs(angle_land - 0) > 0.2:
+                    #     print("手臂不够平")
+
+
+
+
+
+
+# ***************************************************************************************************************************
+                # writer2 = DataWriter(args.save_video, save_path, cv2.VideoWriter_fourcc(*'XVID'), fps, frameSize).start()
+                # if boxes is None or boxes.nelement() == 0:
+                #     writer2.save(None, None, None, None, None, orig_img, im_name.split('/')[-1])
+                #     continue
+                # writer2.save(boxes, scores, hm, pt1, pt2, orig_img, im_name.split('/')[-1])
+                # while (writer2.running2()):
+                #     pass
+                # writer2.stop()
+                # final = writer2.results()
+                # # print(final)
+                # keypoints = final[0]['result'][0]['keypoints']
+                # point_6 = keypoints[5].numpy()
+                # point_8 = keypoints[7].numpy()
+                # point_10 = keypoints[9].numpy()
+                # vector_up = point_6 - point_8
+                # vector_down = point_10 - point_8
+                # angle_ = np.dot(vector_up, vector_down)/ \
+                #          (np.linalg.norm(vector_up) * np.linalg.norm(vector_down))
+                # angle_land = np.dot(vector_up, [0, 1])/ \
+                #          (np.linalg.norm(vector_up))
+                # if abs(angle_ - 0) > 0.2:
+                #     print("你的手臂不是直角")
+                # else:
+                #     print("直角")
+                # if abs(angle_land - 0) > 0.2:
+                #     print("手臂不够平")
 
 
 
@@ -167,5 +275,5 @@ if __name__ == "__main__":
     while(writer.running()):
         pass
     writer.stop()
-    final_result = writer.results()
-    write_json(final_result, args.outputpath)
+    # final_result = writer.results()
+    # write_json(final_result, args.outputpath)

@@ -443,6 +443,10 @@ class DataWriter:
         # save next frame in the queue
         self.Q.put((boxes, scores, hm_data, pt1, pt2, orig_img, im_name))
 
+    def pop(self):
+        # save next frame in the queue
+        self.final_result.pop()
+
     def stop(self):
         # indicate that the thread should be stopped
         self.stopped = True
