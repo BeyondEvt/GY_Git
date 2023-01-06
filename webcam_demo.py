@@ -22,6 +22,7 @@ from fn import getTime
 import cv2
 
 from pPose_nms import write_json
+from standard_data import *
 
 args = opt
 args.dataset = 'coco'
@@ -140,70 +141,64 @@ if __name__ == "__main__":
 
                     standard_num = -1/2
 
-                    ### 正面左手下方
-                    # 左手外侧
-                    if vector_up[0] < 0:
-                        if np.arccos(angle_land) - np.arccos(standard_num) > np.pi/18:
-                            print("左手向外角度适当减小")
-                            index = 1
-                        elif np.arccos(angle_land) - np.arccos(standard_num) < -np.pi/18:
-                            print("左手向外角度适当增大")
-                            index = 2
-                        else:
-                            print("ok")
-                            index = 3
-                    # 左手内侧
-                    if vector_up[0] >= 0:
-                        if np.arccos(angle_land) - np.arccos(standard_num) > np.pi/18:
-                            print("左手往外伸")
-                            index = 4
-                        elif np.arccos(angle_land) - np.arccos(standard_num) < -np.pi/18:
-                            print("左手往里收")
-                            index = 5
-                        else:
-                            print("ok")
-                            index = 6
+                    option1 = standard_data(keypoints)
+                    option1.point_angle(6,7,0, np.pi/6,q)
 
-                    ## 动态评估---区间来回变化(与上下标准比较)
-
-                    if len(q) < 30:
-                        q.append(index)
-
-                    if len(q) == 30:
-                        q.pop(0)
-                        q.append(index)
-
-                    std_down_side = True # 外侧
-                    std_down_value = 0.5 # cos值
-                    ## 与下标准比较
-                    # 判断幅度是否过大
-                    # 下标准在外侧
-                    if std_down_side:
-                        if q.count(2) >= 8:
-                            print("左手摆动下幅度减小*****************************************")
-                            q.__init__()
-
-                    # 判断幅度是否过小
-                    if len(q) == 30:
-                         if q.count(3) <= 5:
-                            print("左手摆动下幅度增大￥￥￥￥￥￥￥￥￥￥￥￥￥￥￥￥￥￥￥￥￥￥￥")
-                            q.__init__()
-
-
+                    # ### 正面左手下方
+                    # # 左手外侧
+                    # if vector_up[0] < 0:
+                    #     if np.arccos(angle_land) - np.arccos(standard_num) > np.pi/18:
+                    #         print("左手向外角度适当减小")
+                    #         index = 1
+                    #     elif np.arccos(angle_land) - np.arccos(standard_num) < -np.pi/18:
+                    #         print("左手向外角度适当增大")
+                    #         index = 2
+                    #     else:
+                    #         print("ok")
+                    #         index = 3
+                    # # 左手内侧
+                    # if vector_up[0] >= 0:
+                    #     if np.arccos(angle_land) - np.arccos(standard_num) > np.pi/18:
+                    #         print("左手往外伸")
+                    #         index = 4
+                    #     elif np.arccos(angle_land) - np.arccos(standard_num) < -np.pi/18:
+                    #         print("左手往里收")
+                    #         index = 5
+                    #     else:
+                    #         print("ok")
+                    #         index = 6
+                    #
+                    # ## 动态评估---区间来回变化(与上下标准比较)
+                    #
+                    # if len(q) < 30:
+                    #     q.append(index)
+                    #
+                    # if len(q) == 30:
+                    #     q.pop(0)
+                    #     q.append(index)
+                    #
+                    # std_down_side = True # 外侧
+                    # std_down_value = 0.5 # cos值
+                    # ## 与下标准比较
+                    # # 判断幅度是否过大
+                    # # 下标准在外侧
+                    # if std_down_side:
+                    #     if q.count(2) >= 8:
+                    #         print("左手摆动下幅度减小*****************************************")
+                    #         q.__init__()
+                    #
+                    # # 判断幅度是否过小
+                    # if len(q) == 30:
+                    #      if q.count(3) <= 5:
+                    #         print("左手摆动下幅度增大￥￥￥￥￥￥￥￥￥￥￥￥￥￥￥￥￥￥￥￥￥￥￥")
+                    #         q.__init__()
+                    #
 
 
 
 
 
                     # 最大角和最小角的评估
-
-
-
-
-
-
-
-
 
 
                     #     else:
