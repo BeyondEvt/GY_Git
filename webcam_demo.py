@@ -140,9 +140,14 @@ if __name__ == "__main__":
                                  (np.linalg.norm(vector_up))
 
                     standard_num = -1/2
+# *********************************************************
+#                     option1 = standard_data(keypoints)
+#                     option1.point_angle(6,7,0, np.pi/6,q)
+# *********************************************************
 
-                    option1 = standard_data(keypoints)
-                    option1.point_angle(6,7,0, np.pi/6,q)
+                    option2 = standard_data(keypoints)
+                    option2.line_angle(1,3, np.pi/6, np.pi/3, q )
+
 
                     # ### 正面左手下方
                     # # 左手外侧
