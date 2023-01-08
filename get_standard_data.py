@@ -2,14 +2,14 @@
 # 大体框架： 1. 点点间(两个关节点间)  主要是评估两个点所成的角度 一个肢节于竖直夹角
 #           2. 线段间(两个肢节间的夹角)    前者是制定该肢节的上下标准，后者是判断角度是否达标。
 import numpy as np
-
-class standard_data(object):
+dict = {}
+class name(object):
     def __init__(self, keypoints):
         self.keypoints = keypoints.numpy()
         self.dict = {"1":[6, 8], "2":[8, 10], "3":[7,9], "4":[9, 11], "5":[12, 14], "6":[14, 16], "7":[13,15], "8":[15, 17]}
 
 
-    def point_angle(self, pt1, pt2,  min_angle, max_angle, Q,):
+    def point_angle(self,min_angle, max_angle, Q, method, line = 0, pt1 = 0, pt2 = 0 ):
 
         pt1_pos = self.keypoints[pt1 - 1]
         pt2_pos = self.keypoints[pt2 - 1]
@@ -61,6 +61,21 @@ class standard_data(object):
             Q.__init__()
         else:
             print("OK")
+
+
+
+    def give_standard(self, line, pt1, pt2, time_start, time_end):
+        if line != 0:
+            if time_start not in dict:
+                dict[time_start] = [[2, time_end,line, pt1, pt2]]
+            else:
+                dict[time_start].append([2, time_end,line, pt1, pt2])
+        else:
+            if time_start not in dict:
+                dict[time_start] = [[1,time_end,line, pt1, pt2]]
+            else:
+                dict[time_start].append([1, time_end,line, pt1, pt2])
+
 
 
 

@@ -20,15 +20,15 @@ from tqdm import tqdm
 import time
 from fn import getTime
 import cv2
-
+import time
 from pPose_nms import write_json
 from standard_data import *
-
+from get_standard_data import *
 args = opt
 args.dataset = 'coco'
 
 q = []  # (存放30帧实时数据)
-
+L = []  # 存放已执行函数
 def loop():
     n = 0
     while True:
@@ -75,6 +75,10 @@ if __name__ == "__main__":
     sys.stdout.flush()
     im_names_desc = tqdm(loop())
     batchSize = args.posebatch
+
+    # 计时器开始
+    start_0 = time.time()
+    start = start_0
     for i in im_names_desc:
         try:
             start_time = getTime()
@@ -140,14 +144,43 @@ if __name__ == "__main__":
                                  (np.linalg.norm(vector_up))
 
                     standard_num = -1/2
+
+                    now = time.time()
+                    # 存储规定时间段内的函数
+                    if np.floor(now - start_0) in dict:
+                        for i in range(len(dict[start])):
+                            if dict[start][i][0] == 1:
+                                L.append([dict[start][i][0], dict[start][i][1],……,start] )
+                            elif dict[start][i][0] == 2:
+                                option2 = name(keypoints)
+                                L.append([option2, dict[start][i][1]])
+                    option = name(keypoints)
+                    # 执行函数
+                    for i in range(len(L)):
+                        option.point_angle(L[i][0], ……)
+
+                    # 结束函数
+                    for i in range(len(L)):
+                        if now - start_0 >= dict[L[i][-1]][1]:
+                            L.pop(i)
+
+
+
+
+
+
+
+
+
+
 # *********************************************************
 #                     option1 = standard_data(keypoints)
-#                     option1.point_angle(6,7,0, np.pi/6,q)
+#                     option1.point_angle(7, 6,0, np.pi/6,q)
 # *********************************************************
 
-                    option2 = standard_data(keypoints)
-                    option2.line_angle(1,3, np.pi/6, np.pi/3, q )
-
+                    # option2 = standard_data(keypoints)
+                    # option2.line_angle(1,3, np.pi/6, np.pi/3, q )
+# ***********************************************************
 
                     # ### 正面左手下方
                     # # 左手外侧
