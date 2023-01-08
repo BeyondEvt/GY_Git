@@ -149,11 +149,9 @@ if __name__ == "__main__":
                     # 存储规定时间段内的函数
                     if np.floor(now - start_0) in dict:
                         for i in range(len(dict[start])):
-                            if dict[start][i][0] == 1:
                                 L.append([dict[start][i][0], dict[start][i][1],……,start] )
-                            elif dict[start][i][0] == 2:
-                                option2 = name(keypoints)
-                                L.append([option2, dict[start][i][1]])
+                        del dict[start]
+
                     option = name(keypoints)
                     # 执行函数
                     for i in range(len(L)):
@@ -161,7 +159,7 @@ if __name__ == "__main__":
 
                     # 结束函数
                     for i in range(len(L)):
-                        if now - start_0 >= dict[L[i][-1]][1]:
+                        if now - start_0 >= L[i][1]:
                             L.pop(i)
 
 
