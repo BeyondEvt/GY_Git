@@ -29,6 +29,35 @@ args.dataset = 'coco'
 
 q = []  # (存放30帧实时数据)
 L = []  # 存放已执行函数
+
+
+list_father = []
+list_count = 0
+
+
+
+give_standard(  0, 6, 7, 0, 0, 0, np.pi/6, 0.0, 15.0)
+give_standard(  6, 0, 0, 0, 0, 0, np.pi/3, 0.0, 15.0)
+give_standard(  8, 0, 0, 0, 0, 0, np.pi/3, 0.0, 15.0)
+give_standard( 5, 0, 0, 0, 0, 0, np.pi/3, 5.0, 20.0)
+give_standard( 7, 0, 0, 0, 0, 0, np.pi/3, 5.0, 20.0)
+# get_standard.give_standard( line, pt1, pt2, line1, line2, min_angle, max_angle, time_start, time_end)
+# get_standard.give_standard( line, pt1, pt2, line1, line2, min_angle, max_angle, time_start, time_end)
+# get_standard.give_standard( line, pt1, pt2, line1, line2, min_angle, max_angle, time_start, time_end)
+# get_standard.give_standard( line, pt1, pt2, line1, line2, min_angle, max_angle, time_start, time_end)
+
+
+
+
+
+count = 0
+for item in func_dict.keys():
+    for j in range(len(func_dict[item])):
+        list_father.append([])
+
+
+
+
 def loop():
     n = 0
     while True:
@@ -79,6 +108,8 @@ if __name__ == "__main__":
     # 计时器开始
     start_0 = time.time()
     start = start_0
+
+
     for i in im_names_desc:
         try:
             start_time = getTime()
@@ -145,22 +176,41 @@ if __name__ == "__main__":
 
                     standard_num = -1/2
 
-                    now = time.time()
-                    # 存储规定时间段内的函数
-                    if np.floor(now - start_0) in dict:
-                        for i in range(len(dict[start])):
-                                L.append([dict[start][i][0], dict[start][i][1],……,start] )
-                        del dict[start]
 
-                    option = name(keypoints)
+
+                    # 存储规定时间段内的函数
+                    now = time.time()
+                    if str(np.floor(now - start_0)) in func_dict:
+                        for i in range(len(func_dict[str(np.floor(now - start_0))])):
+                            L.append(func_dict[str(np.floor(now - start_0))][i])
+                        del func_dict[str(np.floor(now - start_0))]
+
+                    option = standard_func(keypoints)
                     # 执行函数
                     for i in range(len(L)):
-                        option.point_angle(L[i][0], ……)
-
+                        if L[i][0] == 1:
+                            option.point_angle(L[i][5],L[i][6],list_father[list_count],L[i][1],L[i][2],L[i][3])
+                            list_count += 1
+                        if L[i][0] == 2:
+                            option.point_angle(L[i][5],L[i][6],list_father[list_count],L[i][1],L[i][2],L[i][3])
+                            list_count += 1
+                        if L[i][0] == 3:
+                            option.line_angle(L[i][4],L[i][5],L[i][6],L[i][7],list_father[list_count])
+                            list_count += 1
+                    # print(L)
                     # 结束函数
+                    pop_list = []  # 临时存放要pop的函数
                     for i in range(len(L)):
-                        if now - start_0 >= L[i][1]:
-                            L.pop(i)
+                        if (now - start_0) >= L[i][-1]:
+                            pop_list.append(i)
+
+                    pop_list = pop_list[::-1]
+
+
+                    for i in pop_list:
+                        L.pop(i)
+
+                    list_count = 0
 
 
 
@@ -171,7 +221,7 @@ if __name__ == "__main__":
 
 
 
-# *********************************************************
+# ************************************* ********************
 #                     option1 = standard_data(keypoints)
 #                     option1.point_angle(7, 6,0, np.pi/6,q)
 # *********************************************************
