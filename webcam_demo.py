@@ -204,13 +204,13 @@ if __name__ == "__main__":
                         if (now - start_0) >= L[i][-1]:
                             pop_list.append(i)
 
-                    pop_list = pop_list[::-1]
+                    pop_list = pop_list[::-1]  # 将要pop的函数序号颠倒，避免列表长度减少导致索引出错
 
 
                     for i in pop_list:
-                        L.pop(i)
+                        L.pop(i)               # 将不再执行的命令pop出L
 
-                    list_count = 0
+                    list_count = 0             # 重置存放每一帧标准批判结果的列表序号
 
 
 

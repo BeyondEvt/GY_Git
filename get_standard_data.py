@@ -98,6 +98,7 @@ class standard_func(object):
 
 
 def give_standard( line, pt1, pt2, line1, line2, min_angle, max_angle, time_start, time_end): # time_start, time_end精确0.1
+    # 该函数用于教练制定标准，生成一个字典存放标准规范所需的参数
     if line != 0:
         if str(time_start) not in func_dict:
             func_dict[str(time_start)] = [[2, line, pt1, pt2,line1, line2, min_angle, max_angle, time_end]]
