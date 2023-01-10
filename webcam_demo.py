@@ -32,13 +32,11 @@ L = []  # 存放已执行函数
 
 
 list_father = []
-list_count = 0
 
 
-
-give_standard(  0, 6, 7, 0, 0, 0, np.pi/6, 0.0, 15.0)
-give_standard(  6, 0, 0, 0, 0, 0, np.pi/3, 0.0, 15.0)
-give_standard(  8, 0, 0, 0, 0, 0, np.pi/3, 0.0, 15.0)
+give_standard( 0, 6, 7, 0, 0, 0, np.pi/6, 0.0, 15.0)
+give_standard( 6, 0, 0, 0, 0, 0, np.pi/3, 0.0, 15.0)
+give_standard( 8, 0, 0, 0, 0, 0, np.pi/3, 0.0, 15.0)
 give_standard( 5, 0, 0, 0, 0, 0, np.pi/3, 5.0, 20.0)
 give_standard( 7, 0, 0, 0, 0, 0, np.pi/3, 5.0, 20.0)
 # get_standard.give_standard( line, pt1, pt2, line1, line2, min_angle, max_angle, time_start, time_end)
@@ -189,14 +187,14 @@ if __name__ == "__main__":
                     # 执行函数
                     for i in range(len(L)):
                         if L[i][0] == 1:
-                            option.point_angle(L[i][5],L[i][6],list_father[list_count],L[i][1],L[i][2],L[i][3])
-                            list_count += 1
+                            option.point_angle(L[i][5],L[i][6],list_father[i],L[i][1],L[i][2],L[i][3])
+
                         if L[i][0] == 2:
-                            option.point_angle(L[i][5],L[i][6],list_father[list_count],L[i][1],L[i][2],L[i][3])
-                            list_count += 1
+                            option.point_angle(L[i][5],L[i][6],list_father[i],L[i][1],L[i][2],L[i][3])
+
                         if L[i][0] == 3:
-                            option.line_angle(L[i][4],L[i][5],L[i][6],L[i][7],list_father[list_count])
-                            list_count += 1
+                            option.line_angle(L[i][4],L[i][5],L[i][6],L[i][7],list_father[i])
+
                     # print(L)
                     # 结束函数
                     pop_list = []  # 临时存放要pop的函数
@@ -209,8 +207,9 @@ if __name__ == "__main__":
 
                     for i in pop_list:
                         L.pop(i)               # 将不再执行的命令pop出L
+                        list_father.pop(i)
 
-                    list_count = 0             # 重置存放每一帧标准批判结果的列表序号
+
 
 
 
