@@ -1,0 +1,46 @@
+<RegisterLoginWindow>:
+    FloatLayout:
+        canvas.before:
+            BorderImage:
+                # BorderImage behaves like the CSS BorderImage
+                source: 'BorderImage.png'
+
+                pos: (0, 0)
+                size: (500, 300)
+        Label:
+            text: 'AI SPORT'
+            size_hint_max: ("100dp", "50dp")
+            pos: (210,200)
+            color: (0.7, 0.5, 0.7, 0.95)
+            font_size: 80
+
+        Label:
+            text: 'User Name'
+            size_hint_max: ("100dp", "50dp")
+            pos: (95,110)
+            color: (0,0,0,1)
+            font_size: 18
+        Label:
+            text: 'Password'
+            size_hint_max: ("100dp", "50dp")
+            pos: (95,70)
+            color: (0,0,0,1)
+            font_size: 18
+
+
+
+
+<popup_login_fail>:
+    Label:
+        text: "press it"
+        size_hint: 0.6, 0.2
+        pos_hint: {"x":0.2, "top":1}
+    Button:
+        text:"press it"
+        size_hint: 0.8, 0.2
+        pos_hint:{"x":0.1, "y":0.1}
+
+
+
+
+

@@ -43,3 +43,28 @@ class MyApp(App):
 
 if __name__ == '__main__':
     MyApp().run()
+
+# #: import Factory kivy.factory.Factory
+#
+# <MyPopup@Popup>:
+# 	auto_dismiss:False
+# 	title:'Hello Popup'
+# 	on_dismiss:print('on_dismiss is running')
+# 	on_open:print('on_open is running')
+# 	size_hint:.8,.8
+#
+# 	AnchorLayout:
+# 		anchor_x:'center'
+# 		anchor_y:'bottom'
+# 		Button:
+# 			text:'Close Popup'
+# 			size_hint:None,None
+# 			size:100,100
+# 			on_release:root.dismiss()
+# Button:
+# text: 'Login'
+# size_hint_max: ("100dp", "40dp")
+# pos: (120, 30)
+# color: (0, 0, 0, 1)
+# background_color: (1, 0.5, 0.7, 0.95)
+# on_release: Factory.MyPopup().open()

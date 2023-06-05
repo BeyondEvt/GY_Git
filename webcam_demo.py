@@ -1,13 +1,16 @@
+# 该文件为Alphapose框架文件，通过调用摄像头，获取人体关节点数据，
+# 通过不同关节点数据实现不同的人体动作识别算法
+# 将被主程序“Main_kivy”文件所调用
+import json
 import torch
 from torch.autograd import Variable
 import torch.nn.functional as F
 import torchvision.transforms as transforms
-
+from get_standard_data import *
 import torch.nn as nn
 import torch.utils.data
 import numpy as np
 from opt import opt
-
 from dataloader_webcam import WebcamLoader, DetectionLoader, DetectionProcessor, DataWriter, crop_from_dets, Mscoco
 from yolo.darknet import Darknet
 from yolo.util import write_results, dynamic_write_results
@@ -23,37 +26,35 @@ import cv2
 import time
 from pPose_nms import write_json
 from standard_data import *
-from get_standard_data import *
+# from get_standard_data import *
 args = opt
 args.dataset = 'coco'
 
 q = []  # (存放30帧实时数据)
 L = []  # 存放已执行函数
-
+#
+# import pyttsx3 as pyttsx
+#
+# # 调用初始化方法，获取讲话对象
+# engine = pyttsx.init()
+# engine.say('我叼你妈的')
+# engine.runAndWait()
 
 list_father = []
+import json
+# 读取字典数据
+with open("dict.json", 'r+') as f:
+	res_list = json.load(f)
+
+print("res_list:",res_list)
+func_dict = res_list[0]
+print(func_dict)
+end_time = res_list[2] + 2
 
 
-give_standard( 0, 6, 7, 0, 0, 0, np.pi/6, 0.0, 15.0)
-give_standard( 6, 0, 0, 0, 0, 0, np.pi/3, 0.0, 15.0)
-give_standard( 8, 0, 0, 0, 0, 0, np.pi/3, 0.0, 15.0)
-give_standard( 5, 0, 0, 0, 0, 0, np.pi/3, 5.0, 20.0)
-give_standard( 7, 0, 0, 0, 0, 0, np.pi/3, 5.0, 20.0)
-# get_standard.give_standard( line, pt1, pt2, line1, line2, min_angle, max_angle, time_start, time_end)
-# get_standard.give_standard( line, pt1, pt2, line1, line2, min_angle, max_angle, time_start, time_end)
-# get_standard.give_standard( line, pt1, pt2, line1, line2, min_angle, max_angle, time_start, time_end)
-# get_standard.give_standard( line, pt1, pt2, line1, line2, min_angle, max_angle, time_start, time_end)
-
-
-
-
-
-count = 0
 for item in func_dict.keys():
     for j in range(len(func_dict[item])):
         list_father.append([])
-
-
 
 
 def loop():
@@ -62,298 +63,184 @@ def loop():
         yield n
         n += 1
 
-if __name__ == "__main__":
-    webcam = args.webcam
-    mode = args.mode
-    if not os.path.exists(args.outputpath):
-        os.mkdir(args.outputpath)
+# if __name__ == "__main__":
+webcam = args.webcam
+mode = args.mode
+if not os.path.exists(args.outputpath):
+    os.mkdir(args.outputpath)
 
-    # Load input video
-    data_loader = WebcamLoader(webcam).start()
-    (fourcc, fps, frameSize) = data_loader.videoinfo()  # fourcc: 22, fps: 30.0, frameSize: (640, 480)
+# Load input video
+data_loader = WebcamLoader(webcam).start()
+(fourcc, fps, frameSize) = data_loader.videoinfo()  # fourcc: 22, fps: 30.0, frameSize: (640, 480)
 
-    # Load detection loader
-    print('Loading YOLO model..')
-    sys.stdout.flush()
-    det_loader = DetectionLoader(data_loader, batchSize=args.detbatch).start()
-    det_processor = DetectionProcessor(det_loader).start()
-    
-    # Load pose model
-    pose_dataset = Mscoco()
-    if args.fast_inference:
-        pose_model = InferenNet_fast(4 * 1 + 1, pose_dataset)
-    else:
-        pose_model = InferenNet(4 * 1 + 1, pose_dataset)
-    pose_model.cuda()
-    pose_model.eval()
+# Load detection loader
+print('Loading YOLO model..')
+sys.stdout.flush()
+det_loader = DetectionLoader(data_loader, batchSize=args.detbatch).start()
+det_processor = DetectionProcessor(det_loader).start()
 
-    # Data writer
-    save_path = os.path.join(args.outputpath, 'AlphaPose_webcam'+webcam+'.avi')
-    # save_path: examples/res\AlphaPose_webcam0.avi
-    writer = DataWriter(args.save_video, save_path, cv2.VideoWriter_fourcc(*'XVID'), fps, frameSize).start()
+# Load pose model
+pose_dataset = Mscoco()
+if args.fast_inference:
+    pose_model = InferenNet_fast(4 * 1 + 1, pose_dataset)
+else:
+    pose_model = InferenNet(4 * 1 + 1, pose_dataset)
+pose_model.cuda()
+pose_model.eval()
 
-    runtime_profile = {
-        'dt': [],
-        'pt': [],
-        'pn': []
-    }
+# Data writer
+save_path = os.path.join(args.outputpath, 'AlphaPose_webcam'+webcam+'.avi')
+# save_path: examples/res\AlphaPose_webcam0.avi
+writer = DataWriter(args.save_video, save_path, cv2.VideoWriter_fourcc(*'XVID'), fps, frameSize).start()
 
-    print('Starting webcam demo, press Ctrl + C to terminate...')
-    sys.stdout.flush()
-    im_names_desc = tqdm(loop())
-    batchSize = args.posebatch
+runtime_profile = {
+    'dt': [],
+    'pt': [],
+    'pn': []
+}
 
-    # 计时器开始
-    start_0 = time.time()
-    start = start_0
+print('Starting webcam demo, press Ctrl + C to terminate...')
+sys.stdout.flush()
+im_names_desc = tqdm(loop())
+batchSize = args.posebatch
 
+from subprocess import Popen, PIPE, STDOUT
 
-    for i in im_names_desc:
-        try:
-            start_time = getTime()
-            with torch.no_grad():
-                (inps, orig_img, im_name, boxes, scores, pt1, pt2) = det_processor.read()
-                """
-                im_name: 100.jpg
-                boxes: tensor([[1, 2, 3, 4]])
-                scores: tensor([0.9907])  靠近1
-                pt1: tensor([1, 2]) boxes的前两位
-                pt2: tensor([3, 4]) boxes的后两位
-                """
-                # print("This is inps", inps)
-                # print("This is orig_img", orig_img)
-                if boxes is None or boxes.nelement() == 0:
-                    writer.save(None, None, None, None, None, orig_img, im_name.split('/')[-1])
-                    continue
-
-                ckpt_time, det_time = getTime(start_time)
-                # print('This is ckpt_time', ckpt_time)
-                # print('This is det_time', det_time)
-                runtime_profile['dt'].append(det_time)
-                # Pose Estimation
-                
-                datalen = inps.size(0)
-                leftover = 0
-                if datalen % batchSize:
-                    leftover = 1
-                num_batches = datalen // batchSize + leftover
-                hm = []
-                for j in range(num_batches):
-                    inps_j = inps[j*batchSize:min((j + 1)*batchSize, datalen)].cuda()
-                    hm_j = pose_model(inps_j)
-                    hm.append(hm_j)
-                hm = torch.cat(hm)
-                ckpt_time, pose_time = getTime(ckpt_time)
-                runtime_profile['pt'].append(pose_time)
-
-                hm = hm.cpu().data
-                writer.save(boxes, scores, hm, pt1, pt2, orig_img, im_name.split('/')[-1])
-
-                ckpt_time, post_time = getTime(ckpt_time)
-                runtime_profile['pn'].append(post_time)
-
-
-                while (writer.running2()):
-                    pass
-                time.sleep(0.02)
-                result_ = writer.results()
-                writer.__init__()
-
-
-                if len(result_) == 1:
-                    keypoints = result_[-1]['result'][0]['keypoints']
-                    point_6 = keypoints[5].numpy()
-                    point_8 = keypoints[7].numpy()
-                    point_10 = keypoints[9].numpy()
-                    vector_up = point_6 - point_8
-                    vector_down = point_10 - point_8
-                    angle_ = np.dot(vector_up, vector_down) / \
-                             (np.linalg.norm(vector_up) * np.linalg.norm(vector_down))
-                    angle_land = np.dot(vector_up, [0, -1]) / \
-                                 (np.linalg.norm(vector_up))
-
-                    standard_num = -1/2
+p = Popen([sys.executable, "video_play.py"], stdout=PIPE, stdin=PIPE, stderr=STDOUT)
+# 计时器开始
+start_0 = time.time()
+start = start_0
 
 
 
-                    # 存储规定时间段内的函数
-                    now = time.time()
-                    if str(np.floor(now - start_0)) in func_dict:
-                        for i in range(len(func_dict[str(np.floor(now - start_0))])):
-                            L.append(func_dict[str(np.floor(now - start_0))][i])
-                        del func_dict[str(np.floor(now - start_0))]
-
-                    option = standard_func(keypoints)
-                    # 执行函数
-                    for i in range(len(L)):
-                        if L[i][0] == 1:
-                            option.point_angle(L[i][5],L[i][6],list_father[i],L[i][1],L[i][2],L[i][3])
-
-                        if L[i][0] == 2:
-                            option.point_angle(L[i][5],L[i][6],list_father[i],L[i][1],L[i][2],L[i][3])
-
-                        if L[i][0] == 3:
-                            option.line_angle(L[i][4],L[i][5],L[i][6],L[i][7],list_father[i])
-
-                    # print(L)
-                    # 结束函数
-                    pop_list = []  # 临时存放要pop的函数
-                    for i in range(len(L)):
-                        if (now - start_0) >= L[i][-1]:
-                            pop_list.append(i)
-
-                    pop_list = pop_list[::-1]  # 将要pop的函数序号颠倒，避免列表长度减少导致索引出错
-
-
-                    for i in pop_list:
-                        L.pop(i)               # 将不再执行的命令pop出L
-                        list_father.pop(i)
+for i in im_names_desc:
 
 
 
 
+    try:
+        start_time = getTime()
+        with torch.no_grad():
+            (inps, orig_img, im_name, boxes, scores, pt1, pt2) = det_processor.read()
+            """
+            im_name: 100.jpg
+            boxes: tensor([[1, 2, 3, 4]])
+            scores: tensor([0.9907])  靠近1
+            pt1: tensor([1, 2]) boxes的前两位
+            pt2: tensor([3, 4]) boxes的后两位
+            """
+            # print("This is inps", inps)
+            # print("This is orig_img", orig_img)
+            if boxes is None or boxes.nelement() == 0:
+                writer.save(None, None, None, None, None, orig_img, im_name.split('/')[-1])
+                continue
+
+            ckpt_time, det_time = getTime(start_time)
+            # print('This is ckpt_time', ckpt_time)
+            # print('This is det_time', det_time)
+            runtime_profile['dt'].append(det_time)
+            # Pose Estimation
+
+            datalen = inps.size(0)
+            leftover = 0
+            if datalen % batchSize:
+                leftover = 1
+            num_batches = datalen // batchSize + leftover
+            hm = []
+            for j in range(num_batches):
+                inps_j = inps[j*batchSize:min((j + 1)*batchSize, datalen)].cuda()
+                hm_j = pose_model(inps_j)
+                hm.append(hm_j)
+            hm = torch.cat(hm)
+            ckpt_time, pose_time = getTime(ckpt_time)
+            runtime_profile['pt'].append(pose_time)
+
+            hm = hm.cpu().data
+            writer.save(boxes, scores, hm, pt1, pt2, orig_img, im_name.split('/')[-1])
+
+            ckpt_time, post_time = getTime(ckpt_time)
+            runtime_profile['pn'].append(post_time)
 
 
+            while (writer.running2()):
+                pass
+            time.sleep(0.02)
+            result_ = writer.results()
+            writer.__init__()
 
 
+            if len(result_) == 1:
+                # 获取每帧的人体关节点数据并计算各肢节所形成的角度
+                keypoints = result_[-1]['result'][0]['keypoints']
+                point_6 = keypoints[5].numpy()
+                point_8 = keypoints[7].numpy()
+                point_10 = keypoints[9].numpy()
+                vector_up = point_6 - point_8
+                vector_down = point_10 - point_8
+                angle_ = np.dot(vector_up, vector_down) / \
+                         (np.linalg.norm(vector_up) * np.linalg.norm(vector_down))
+                angle_land = np.dot(vector_up, [0, -1]) / \
+                             (np.linalg.norm(vector_up))
+
+                standard_num = -1/2
 
 
+                # 存储规定时间段内所需执行的人体动作识别函数，将函数存于一个栈（列表）中，供后续执行
+                now = time.time()
+                if now - start_0 >=  end_time:
+                    print(now - start_0, end_time)
+                    print("退出")
+                    os._exit(0)
+                if str(np.floor(now - start_0)) in func_dict:
+                    for i in range(len(func_dict[str(np.floor(now - start_0))])):
+                        L.append(func_dict[str(np.floor(now - start_0))][i])
+                    del func_dict[str(np.floor(now - start_0))]
+
+                option = standard_func(keypoints)
+
+                # 执行上述存储在栈中的人体动作识别函数
+                for i in range(len(L)):
+                    # 通过列表每个元素第一个数据来决定采用哪个识别函数
+                    if L[i][0] == 1:
+                        option.point_angle(L[i][2],L[i][3],L[i][6],L[i][7],L[i][-1],list_father[i])
+
+                    if L[i][0] == 2:
+                        option.line_angle(L[i][1],L[i][6],L[i][7],L[i][8],L[i][9],L[i][-4],L[i][-1],list_father[i])
+
+                    if L[i][0] == 3:
+                        option.lines_angle(L[i][4],L[i][5],L[i][6],L[i][7],L[i][-1],list_father[i])
+
+                # print(L)
+                # 结束函数
+                pop_list = []  # 临时存放要pop的函数
+                for i in range(len(L)):
+                    if (now - start_0) >= L[i][-2]:
+                        pop_list.append(i)
+
+                pop_list = pop_list[::-1]  # 将要pop的函数序号颠倒，避免列表长度减少导致索引出错
 
 
-# ************************************* ********************
-#                     option1 = standard_data(keypoints)
-#                     option1.point_angle(7, 6,0, np.pi/6,q)
-# *********************************************************
+                for i in pop_list:
+                    L.pop(i)               # 将不再执行的命令pop出L
+                    list_father.pop(i)
 
-                    # option2 = standard_data(keypoints)
-                    # option2.line_angle(1,3, np.pi/6, np.pi/3, q )
-# ***********************************************************
+        if args.profile:
+            # TQDM
+            im_names_desc.set_description(
+            'det time: {dt:.3f} | pose time: {pt:.2f} | post processing: {pn:.4f}'.format(
+                dt=np.mean(runtime_profile['dt']), pt=np.mean(runtime_profile['pt']), pn=np.mean(runtime_profile['pn']))
+            )
+    except KeyboardInterrupt:
+        break
 
-                    # ### 正面左手下方
-                    # # 左手外侧
-                    # if vector_up[0] < 0:
-                    #     if np.arccos(angle_land) - np.arccos(standard_num) > np.pi/18:
-                    #         print("左手向外角度适当减小")
-                    #         index = 1
-                    #     elif np.arccos(angle_land) - np.arccos(standard_num) < -np.pi/18:
-                    #         print("左手向外角度适当增大")
-                    #         index = 2
-                    #     else:
-                    #         print("ok")
-                    #         index = 3
-                    # # 左手内侧
-                    # if vector_up[0] >= 0:
-                    #     if np.arccos(angle_land) - np.arccos(standard_num) > np.pi/18:
-                    #         print("左手往外伸")
-                    #         index = 4
-                    #     elif np.arccos(angle_land) - np.arccos(standard_num) < -np.pi/18:
-                    #         print("左手往里收")
-                    #         index = 5
-                    #     else:
-                    #         print("ok")
-                    #         index = 6
-                    #
-                    # ## 动态评估---区间来回变化(与上下标准比较)
-                    #
-                    # if len(q) < 30:
-                    #     q.append(index)
-                    #
-                    # if len(q) == 30:
-                    #     q.pop(0)
-                    #     q.append(index)
-                    #
-                    # std_down_side = True # 外侧
-                    # std_down_value = 0.5 # cos值
-                    # ## 与下标准比较
-                    # # 判断幅度是否过大
-                    # # 下标准在外侧
-                    # if std_down_side:
-                    #     if q.count(2) >= 8:
-                    #         print("左手摆动下幅度减小*****************************************")
-                    #         q.__init__()
-                    #
-                    # # 判断幅度是否过小
-                    # if len(q) == 30:
-                    #      if q.count(3) <= 5:
-                    #         print("左手摆动下幅度增大￥￥￥￥￥￥￥￥￥￥￥￥￥￥￥￥￥￥￥￥￥￥￥")
-                    #         q.__init__()
-                    #
-
-
-
-
-
-                    # 最大角和最小角的评估
-
-
-                    #     else:
-                    #         print("直角")
-                    #     if abs(angle_land - 0) > 0.2:
-                    #         print("手臂不够平")
-                    #
-                    #
-                    # if abs(angle_ - 0) > 0.2:
-                    #     print("你的手臂不是直角")
-                    # else:
-                    #     print("直角")
-                    # if abs(angle_land - 0) > 0.2:
-                    #     print("手臂不够平")
-
-
-
-
-
-
-# ***************************************************************************************************************************
-                # writer2 = DataWriter(args.save_video, save_path, cv2.VideoWriter_fourcc(*'XVID'), fps, frameSize).start()
-                # if boxes is None or boxes.nelement() == 0:
-                #     writer2.save(None, None, None, None, None, orig_img, im_name.split('/')[-1])
-                #     continue
-                # writer2.save(boxes, scores, hm, pt1, pt2, orig_img, im_name.split('/')[-1])
-                # while (writer2.running2()):
-                #     pass
-                # writer2.stop()
-                # final = writer2.results()
-                # # print(final)
-                # keypoints = final[0]['result'][0]['keypoints']
-                # point_6 = keypoints[5].numpy()
-                # point_8 = keypoints[7].numpy()
-                # point_10 = keypoints[9].numpy()
-                # vector_up = point_6 - point_8
-                # vector_down = point_10 - point_8
-                # angle_ = np.dot(vector_up, vector_down)/ \
-                #          (np.linalg.norm(vector_up) * np.linalg.norm(vector_down))
-                # angle_land = np.dot(vector_up, [0, 1])/ \
-                #          (np.linalg.norm(vector_up))
-                # if abs(angle_ - 0) > 0.2:
-                #     print("你的手臂不是直角")
-                # else:
-                #     print("直角")
-                # if abs(angle_land - 0) > 0.2:
-                #     print("手臂不够平")
-
-
-
-
-
-
-            if args.profile:
-                # TQDM
-                im_names_desc.set_description(
-                'det time: {dt:.3f} | pose time: {pt:.2f} | post processing: {pn:.4f}'.format(
-                    dt=np.mean(runtime_profile['dt']), pt=np.mean(runtime_profile['pt']), pn=np.mean(runtime_profile['pn']))
-                )
-        except KeyboardInterrupt:
-            break
-
-    # print("This is runtime_profile", runtime_profile)
-    print(' ')
-    print('===========================> Finish Model Running.')
-    if (args.save_img or args.save_video) and not args.vis_fast:
-        print('===========================> Rendering remaining images in the queue...')
-        print('===========================> If this step takes too long, you can enable the --vis_fast flag to use fast rendering (real-time).')
-    while(writer.running()):
-        pass
-    writer.stop()
-    # final_result = writer.results()
-    # write_json(final_result, args.outputpath)
+# print("This is runtime_profile", runtime_profile)
+print(' ')
+print('===========================> Finish Model Running.')
+if (args.save_img or args.save_video) and not args.vis_fast:
+    print('===========================> Rendering remaining images in the queue...')
+    print('===========================> If this step takes too long, you can enable the --vis_fast flag to use fast rendering (real-time).')
+while(writer.running()):
+    pass
+writer.stop()
+final_result = writer.results()
+write_json(final_result, args.outputpath)

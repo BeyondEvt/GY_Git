@@ -33,6 +33,9 @@ class standard_data(object):
             Q.append(index)
 
         if Q.count(1) >= 8:
+
+
+
             print("你的两肩高低距离适当减小￥￥￥￥￥￥￥￥￥￥￥￥￥￥￥￥￥￥￥￥￥￥￥")
             Q.__init__()
         else:
