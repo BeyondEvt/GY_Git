@@ -13,6 +13,7 @@ with open("dict.json", 'r+') as f:
 	res_list = json.load(f)
 video_name = res_list[1]
 end_time = res_list[2]
+print(res_list)
 
 class VideoPlayerTest(BoxLayout):  ##布局类
     def __init__(self, **kwargs):  ##初始化
