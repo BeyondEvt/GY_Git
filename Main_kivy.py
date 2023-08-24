@@ -90,6 +90,7 @@ class VideoPlayerTest(BoxLayout):  ##布局类
         player = VideoPlayer(source='video1.mp4', state='play', options={'allow_stretch': True, 'eos': 'loop'})
         self.add_widget(player)
 
+# test 01
 
 class VideoPlayerApp(App):  ##实现App类的build()方法（继承自App类）
     def build(self):
