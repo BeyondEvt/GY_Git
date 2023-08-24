@@ -1,10 +1,4 @@
-# from  PIL
-# import ImageColor
-# # print(ImageColor.getcolor('black', 'RGB'))
-# # main.py
-# import MySQLdb
 import win32api
-from kivy.app import App
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.label import Label
 from kivy.uix.textinput import TextInput
@@ -19,7 +13,6 @@ from kivy.core.text import LabelBase
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.videoplayer import VideoPlayer  ##引入控件
 from kivy.factory import Factory
-import os
 import subprocess
 # 统一中文字体
 LabelBase.register(name='Font_Hanzi', fn_regular='kvcn.ttc')  # 导入字体文件
@@ -34,25 +27,17 @@ from yolo.util import write_results, dynamic_write_results
 from SPPE.src.main_fast_inference import *
 
 from SPPE.src.utils.img import im_to_torch
-import os
 import sys
 from tqdm import tqdm
-import time
 from fn import getTime
 import cv2
 import time
 from pPose_nms import write_json
-from standard_data import *
 from get_standard_data import *
 import os
-# test01
-# test ??
 
 # 该文件为程序主界面文件，界面开发采用了kivy框架
 # 结合了教练制定标准数据的功能和用户提取视频标准数据并开始人体识别的功能
-
-
-
 
 # 获取视频基础数据
 from MySql.connect_mysql import VIDEO_data2
