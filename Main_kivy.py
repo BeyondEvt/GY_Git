@@ -84,94 +84,96 @@ class VideoPlayerApp(App):  ##实现App类的build()方法（继承自App类）
 
 
 class UserInput(TextInput):  # 一个基类为TextInput的类
-
-
     def __init__(self, **kwargs):
         super(UserInput, self).__init__(**kwargs)
 
 
 class ExeMainWindow(App):  # app主窗口界面
     def build(self):
+        # 创建浮动布局
         self.layout = FloatLayout()
-        # 打开教练输入标准数据的窗口界面的按钮
-        self.input_button = Button(text = "录入标准数据",
+
+        # "录入标准数据"按钮
+        self.input_button = Button(text="录 入 标 准 数 据",
                                    font_name='kvcn.ttc',
-                                   font_size = 18,
+                                   font_size=18,
                                    background_color=[148 / 155, 242 / 155, 249 / 155],
-                                   size_hint = (0.15,0.1),
-                                   pos_hint = {"x": 0.1, "top":0.8}
+                                   size_hint=(0.15,0.1),
+                                   pos_hint={"x": 0.1, "top":0.8}
                                    )
         self.layout.add_widget(self.input_button)
-        self.input_button.bind(on_press = self.Input_num_Window)
+        self.input_button.bind(on_press=self.Input_num_Window)
 
-        # 用户开始的按钮
-        self.start_button = Button(text="开 始",
+        # "选择视频"按钮
+        self.start_button = Button(text="选 择 视 频",
                                    font_name='kvcn.ttc',
                                    font_size=18 ,
                                    background_color=[148 / 155, 242 / 155, 249 / 155],
                                    size_hint=(0.15, 0.1),
                                    pos_hint={"x": 0.1, "top": 0.6}
                                    )
-
-
         self.layout.add_widget(self.start_button)
         self.start_button.bind(on_press=self.SelectVideo_window)
+
         return self.layout
 
-
-
-
-    def Input_num_Window(self, button):  # 教练输入视频基础参数的的窗口
+    def Input_num_Window(self, button):  # 教练输入视频 "基 础" 参数的的窗口
         layout = FloatLayout()
-        self.num = UserInput(multiline=False,
-                             font_name='Font_Hanzi',
-                              size_hint=(0.3, 0.15),
-                              pos_hint={"x": 0.1, "top": 0.85})
-        layout.add_widget(self.num)
-        self.Vname = UserInput(multiline=False,
-                               font_name='Font_Hanzi',
-                              size_hint=(0.3, 0.15),
-                              pos_hint={"x": 0.6, "top": 0.85})
-        layout.add_widget(self.Vname)
-        self.Vtime = UserInput(multiline=False,
-                              size_hint=(0.3, 0.15),
-                              pos_hint={"x": 0.1, "top": 0.45})
-        layout.add_widget(self.Vtime)
-
+        # "视频编号"标签和输入框
         layout.add_widget(Label(text="视 频 编 号",
                                 font_name='Font_Hanzi',
                                 size_hint=(0.045, 0.05),
                                 pos_hint={"x": 0.23, "top": 0.62}))
+        self.num = UserInput(multiline=False,
+                             font_name='Font_Hanzi',
+                             size_hint=(0.3, 0.15),
+                             pos_hint={"x": 0.1, "top": 0.85})
+        layout.add_widget(self.num)
+
+        # "视频名称"标签和输入框
         layout.add_widget(Label(text="视 频 名 称",
                                 font_name='Font_Hanzi',
                                 size_hint=(0.045, 0.05),
                                 pos_hint={"x": 0.73, "top": 0.62}))
+        self.Vname = UserInput(multiline=False,
+                               font_name='Font_Hanzi',
+                               size_hint=(0.3, 0.15),
+                               pos_hint={"x": 0.6, "top": 0.85})
+        layout.add_widget(self.Vname)
+
+        # "视频时长"标签和输入框
         layout.add_widget(Label(text="视 频 时 长",
                                 font_name='Font_Hanzi',
                                 size_hint=(0.045, 0.05),
                                 pos_hint={"x": 0.23, "top": 0.21}))
+        self.Vtime = UserInput(multiline=False,
+                               size_hint=(0.3, 0.15),
+                               pos_hint={"x": 0.1, "top": 0.45})
+        layout.add_widget(self.Vtime)
+
+        # 窗口底部的提示标签
         layout.add_widget(Label(text="(视频存储编号自定义且不可重复)",
                                 font_name='Font_Hanzi',
                                 size_hint=(0.03, 0.04),
                                 pos_hint={"x": 0.49, "top": 0.10}))
-
+        # “确认”按钮
         confirm_button = Button(text="确 认",
-                                           font_name='Font_Hanzi',
-                                           background_color=(148 / 155, 242 / 155, 249 / 155),
-                                           size_hint=(0.3, 0.2),
-                                           pos_hint={"x": 0.6, "top": 0.45}
-                                           )
+                                font_name='Font_Hanzi',
+                                background_color=(148 / 155, 242 / 155, 249 / 155),
+                                size_hint=(0.3, 0.2),
+                                pos_hint={"x": 0.6, "top": 0.45})
         layout.add_widget(confirm_button)
-
         confirm_button.bind(on_press=self.Input_Window)
 
+        # 右上角关闭页面按钮
         closeButton = Button(text="×",
                              font_size=21,
                              background_color=[1, 0, 0, 1],
                              size_hint=(0.05, 0.05),
                              pos_hint={"x": 0.95, "top": 1})
-
         layout.add_widget(closeButton)
+
+        # 窗口对象
         popup = Popup(title="Input The Data Number",
                       content=layout,
                       size_hint=(None, None),
@@ -180,51 +182,47 @@ class ExeMainWindow(App):  # app主窗口界面
         closeButton.bind(on_press=popup.dismiss)
 
 
-    # 用户选择视频的界面
-    def SelectVideo_window(self, button):  # 教练输入视频基础参数的的窗口
+    # “选 择 视 频”界面
+    def SelectVideo_window(self, button):
         layout = FloatLayout()
 
-
-        # 输入选择视频的id
+        # “请输入视频编号”标签和输入框
+        layout.add_widget(Label(text="请 输 入 视 频 编 号",
+                                font_name='Font_Hanzi',
+                                size_hint=(0.15, 0.04),
+                                pos_hint={"x": 0.75, "top": 0.9}))
         self.video_id = UserInput(multiline=False,
-                             size_hint=(0.15, 0.04),
-                             pos_hint={"x": 0.75, "top": 0.85})
+                                  size_hint=(0.15, 0.04),
+                                  pos_hint={"x": 0.75, "top": 0.85})
         layout.add_widget(self.video_id)
 
-        # 确认并开始视频
+        # “确认”按钮
         confirm_button = Button(text="确 认",
-                                           font_name='Font_Hanzi',
-                                           background_color=(148 / 155, 242 / 155, 249 / 155),
-                                           size_hint=(0.15, 0.04),
-                                           pos_hint={"x": 0.75, "top": 0.8}
-                                           )
+                                font_name='Font_Hanzi',
+                                background_color=(148 / 155, 242 / 155, 249 / 155),
+                                size_hint=(0.15, 0.04),
+                                pos_hint={"x": 0.75, "top": 0.8})
         layout.add_widget(confirm_button)
-
-
         confirm_button.bind(on_press=self.webcam_start2)
 
-
+        # 右上角关闭页面按钮
         closeButton = Button(text="×",
                              font_size=21,
                              background_color=[1, 0, 0, 1],
                              size_hint=(0.05, 0.05),
                              pos_hint={"x": 0.95, "top": 1})
-
         layout.add_widget(closeButton)
-        popup = Popup(title="Input The Data Number",
+
+        # 窗口对象
+        popup = Popup(title="Select your video",
                       content=layout,
                       size_hint=(None, None),
-                      size=(1080, 900)
+                      size=(880, 700)
                       )
         popup.open()
         closeButton.bind(on_press=popup.dismiss)
 
-
-        layout.add_widget(Label(text="请 输 入 视 频 编 号",
-                                font_name='Font_Hanzi',
-                                size_hint=(0.15, 0.04),
-                                pos_hint={"x": 0.75, "top": 0.9}))
-
+        # 左侧“视频编号”和“视频名称”标签
         layout.add_widget(Label(text="视 频 编 号：",
                                 font_name='Font_Hanzi',
                                 size_hint=(0.045, 0.05),
@@ -233,26 +231,25 @@ class ExeMainWindow(App):  # app主窗口界面
                                 font_name='Font_Hanzi',
                                 size_hint=(0.045, 0.05),
                                 pos_hint={"x": 0.4, "top": 0.95}))
+        # 罗列所有视频
         for i in range(len(video_id)):
             layout.add_widget(Label(text=video_id[i],
                                     font_name='Font_Hanzi',
                                     size_hint=(0.045, 0.05),
                                     pos_hint={"x": 0.1, "top": 0.95-(i+1)*0.03}))
-        for i in range(len(video_name)):
             layout.add_widget(Label(text=video_name[i],
                                     font_name='Font_Hanzi',
                                     size_hint=(0.045, 0.05),
                                     pos_hint={"x": 0.4, "top": 0.95-(i+1)*0.03}))
 
-
-
-    def Input_Window(self, button):  # 教练输入标准数据的窗口
+    def Input_Window(self, button):  # 教练输入标准 "详 细" 数据的窗口
         layout = FloatLayout()
 
         VIDEO_data_num = VIDEO_data2()[0::3]
 
-        if (self.num.text.strip() == '' or self.num.text is  None) or (self.Vname.text.strip() == '' or self.Vname.text
-                is  None) or (self.Vtime.text.strip() == '' or self.Vtime.text is  None):
+        if (self.num.text.strip() == '' or self.num.text is None) or\
+                (self.Vname.text.strip() == '' or self.Vname.text is None) or\
+                (self.Vtime.text.strip() == '' or self.Vtime.text is None):
             layout.add_widget(Label(text="视频信息不能为空，请重新填写！",
                                     font_name='Font_Hanzi',
                                     size_hint=(0.045, 0.05),
@@ -271,9 +268,7 @@ class ExeMainWindow(App):  # app主窗口界面
             popup.open()
             closeButton.bind(on_press=popup.dismiss)  # 关闭按钮绑定关闭popup窗口的功能
 
-
         else:
-
             if self.num.text not in VIDEO_data_num:             # 对其进行查找
                 # 将视频基础参数存入数据库
                 insert_mysql3(self.num.text, self.Vname.text, self.Vtime.text)
@@ -382,7 +377,8 @@ class ExeMainWindow(App):  # app主窗口界面
                 layout.add_widget(Label(text = "line", size_hint = (0.05, 0.05), pos_hint = {"x": 0.05, "top": 0.95}))
                 layout.add_widget(Label(text = "line", size_hint = (0.05, 0.05), pos_hint = {"x": 0.05, "top": 0.95}))
 
-            else: # 若视频编号已存在
+            else:
+                # 若视频编号已存在
                 self.num.text = ''
                 self.Vtime.text = ''
                 self.Vname.text = ''
@@ -404,7 +400,7 @@ class ExeMainWindow(App):  # app主窗口界面
                 popup.open()
                 closeButton.bind(on_press=popup.dismiss)  # 关闭按钮绑定关闭popup窗口的功能
 
-    def save_over(self,_):
+    def save_over(self):
         self.num.text = ''
         self.Vtime.text = ''
         self.Vname.text = ''
