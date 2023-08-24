@@ -24,10 +24,8 @@ class standard_func(object):
         else:
             vector1 = pt2_pos - pt1_pos
             vector2 = [pt2_pos[0] - pt1_pos[0], 0]
-
+        # 向量与水平线的夹角
         real_angle = np.arccos(abs((np.dot(vector1, vector2)/(np.linalg.norm(vector1) * np.linalg.norm(vector2)))))
-
-
 
         # 评判角度是否达到标准
         index = 0
@@ -67,8 +65,6 @@ class standard_func(object):
     def line_angle(self, line, min_angle_down, max_angle_up, min_angle_up,  max_angle_down, line_is_move, tips, Q, ):
 
             # 判断最大角度区间
-            # print(line)
-            # print(str(line))
             pt1_pos = self.keypoints[line_dict[str(line)][0] - 1]
             pt2_pos = self.keypoints[line_dict[str(line)][1] - 1]
 
