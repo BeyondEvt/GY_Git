@@ -2,7 +2,7 @@
 # 大体框架： 1. 点点间(两个关节点间)  主要是评估两个点所成的角度 一个肢节于竖直夹角
 #           2. 线段间(两个肢节间的夹角)    前者是制定该肢节的上下标准，后者是判断角度是否达标。
 import numpy as np
-
+# test
 class standard_data(object):
     def __init__(self, keypoints):
         self.keypoints = keypoints.numpy()
