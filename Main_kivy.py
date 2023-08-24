@@ -46,9 +46,7 @@ from standard_data import *
 from get_standard_data import *
 import os
 # test01
-# test02
-# test03
-# test04
+
 # 该文件为程序主界面文件，界面开发采用了kivy框架
 # 结合了教练制定标准数据的功能和用户提取视频标准数据并开始人体识别的功能
 
@@ -91,7 +89,7 @@ class VideoPlayerTest(BoxLayout):  ##布局类
         player = VideoPlayer(source='video1.mp4', state='play', options={'allow_stretch': True, 'eos': 'loop'})
         self.add_widget(player)
 
-# test 01
+
 
 class VideoPlayerApp(App):  ##实现App类的build()方法（继承自App类）
     def build(self):
