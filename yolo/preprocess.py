@@ -52,7 +52,7 @@ def prep_frame(img, inp_dim):
 
     Returns a Variable
     """
-
+    # print('img',img,'inp_dim',inp_dim)
     orig_im = img
     dim = orig_im.shape[1], orig_im.shape[0]
     img = (letterbox_image(orig_im, (inp_dim, inp_dim)))
