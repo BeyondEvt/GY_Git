@@ -53,68 +53,6 @@ class WebcamLoader:
         t.start()
         return self
 
-
-    # def update(self):
-    #     # keep looping infinitely
-    #     i = 0
-    #     while True:
-    #         # otherwise, ensure the queue has room in it
-    #         if not self.Q.full():
-    #             img = []
-    #             orig_img = []
-    #             im_name = []
-    #             im_dim_list = []
-    #             for k in range(self.batchSize):
-    #                 (grabbed, frame) = self.stream.read()
-    #                 # if the `grabbed` boolean is `False`, then we have
-    #                 # reached the end of the video file
-    #                 if not grabbed:
-    #                     self.stop()
-    #                     return
-    #                 inp_dim = int(opt.inp_dim)
-    #                 # ******************************************
-    #                 # ******************************************
-    #                 # ******************************************
-    #                 # 把frame和inp_dim传输到云端
-    #                 # ******************************************
-    #                 # ******************************************
-    #                 # ******************************************
-    #
-    #                 from socket import socket, AF_INET, SOCK_STREAM
-    #
-    #                 # 服务端的ip地址
-    #                 server_ip = '172.30.203.76'
-    #                 # 服务端socket绑定的端口号
-    #                 server_port = 8081
-    #                 frame = bytes(frame, encoding="gbk")
-    #                 inp_dim = bytes(inp_dim, encoding="gbk")
-    #                 client = socket(AF_INET, SOCK_STREAM)
-    #                 print('client:\n',client)
-    #                 client.connect((server_ip, server_port))
-    #                 client.send(frame,inp_dim)
-    #                 print("str(client.recv(8192)\n",str(client.recv(8192), encoding="gbk"))
-    #                 client.close()
-    #
-    #
-    #
-    #                 img_k, orig_img_k, im_dim_list_k = prep_frame(frame, inp_dim)
-    #
-    #                 img.append(img_k)
-    #                 orig_img.append(orig_img_k)
-    #                 im_name.append(str(i) + '.jpg')
-    #                 im_dim_list.append(im_dim_list_k)
-    #
-    #             with torch.no_grad():
-    #                 # Human Detection
-    #                 img = torch.cat(img)
-    #                 im_dim_list = torch.FloatTensor(im_dim_list).repeat(1, 2)
-    #
-    #                 self.Q.put((img, orig_img, im_name, im_dim_list))
-    #                 i = i + 1
-    #
-    #         else:
-    #             with self.Q.mutex:
-    #                 self.Q.queue.clear()
     def update(self):
         # keep looping infinitely
         i = 0
@@ -133,12 +71,8 @@ class WebcamLoader:
                         self.stop()
                         return
                     inp_dim = int(opt.inp_dim)
-
-
-
-
                     img_k, orig_img_k, im_dim_list_k = prep_frame(frame, inp_dim)
-
+                
                     img.append(img_k)
                     orig_img.append(orig_img_k)
                     im_name.append(str(i)+'.jpg')

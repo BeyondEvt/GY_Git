@@ -87,6 +87,8 @@ class RegisterLoginWindow(App):
         self.layout.add_widget(self.password)
 
 
+
+
         # 创建登陆注册按钮并对应事件处理函数
         self.login_button = Button(text = "登录",
                                    font_name='Font_Hanzi',
@@ -131,6 +133,7 @@ class RegisterLoginWindow(App):
                     RegisterLoginWindow.stop(self)
                     Window.size = (1200, 900)
                     ExeMainWindow().run()
+
 
 
 
@@ -293,5 +296,7 @@ class RegisterLoginWindow(App):
         closeButton.bind(on_press=popup.dismiss)
 
 
+
 if __name__ == '__main__':
     RegisterLoginWindow().run()
+
