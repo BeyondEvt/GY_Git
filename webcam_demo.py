@@ -1,3 +1,6 @@
+
+
+
 # 该文件为Alphapose框架文件，通过调用摄像头，获取人体关节点数据，
 # 通过不同关节点数据实现不同的人体动作识别算法
 # 将被主程序“Main_kivy”文件所调用
@@ -29,6 +32,8 @@ from standard_data import *
 # from get_standard_data import *
 args = opt
 args.dataset = 'coco'
+
+
 
 q = []  # (存放30帧实时数据)
 L = []  # 存放已执行函数
@@ -115,9 +120,6 @@ start = start_0
 
 for i in im_names_desc:
 
-
-
-
     try:
         start_time = getTime()
         with torch.no_grad():
@@ -187,6 +189,12 @@ for i in im_names_desc:
 
                 # 存储规定时间段内所需执行的人体动作识别函数，将函数存于一个栈（列表）中，供后续执行
                 now = time.time()
+                if int(now - start_0) % 10 == 0:
+                    engine = pyttsx.init()
+                    engine.say("目前得分为{}分".format(end()))
+                    engine.runAndWait()
+
+
                 if now - start_0 >=  end_time:
                     print(now - start_0, end_time)
                     print("退出")
@@ -195,6 +203,10 @@ for i in im_names_desc:
                     for i in range(len(func_dict[str(np.floor(now - start_0))])):
                         L.append(func_dict[str(np.floor(now - start_0))][i])
                     del func_dict[str(np.floor(now - start_0))]
+                # print(point)
+                # engine = pyttsx.init()
+                # engine.say(point)
+                # engine.runAndWait()
 
                 option = standard_func(keypoints)
 
@@ -224,6 +236,7 @@ for i in im_names_desc:
                     L.pop(i)               # 将不再执行的命令pop出L
                     list_father.pop(i)
 
+
         if args.profile:
             # TQDM
             im_names_desc.set_description(
@@ -232,7 +245,10 @@ for i in im_names_desc:
             )
     except KeyboardInterrupt:
         break
-
+print(end())
+engine = pyttsx.init()
+engine.say("您的总得分为{}分".format(end()))
+engine.runAndWait()
 # print("This is runtime_profile", runtime_profile)
 print(' ')
 print('===========================> Finish Model Running.')
