@@ -45,7 +45,7 @@ from pPose_nms import write_json
 from standard_data import *
 from get_standard_data import *
 import os
-
+# test01
 # 该文件为程序主界面文件，界面开发采用了kivy框架
 # 结合了教练制定标准数据的功能和用户提取视频标准数据并开始人体识别的功能
 
