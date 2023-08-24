@@ -1,7 +1,6 @@
 # main.py
 import re
 # kivy 引用
-import MySQLdb
 from kivy.app import App
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.boxlayout import BoxLayout

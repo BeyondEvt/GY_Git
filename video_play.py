@@ -19,6 +19,7 @@ class VideoPlayerTest(BoxLayout):  ##布局类
         super(VideoPlayerTest, self).__init__(**kwargs)
 
         player = VideoPlayer(source=res_list[1], state='play', options={'allow_stretch': True, 'eos': 'loop'})
+        print(res_list)
         self.add_widget(player)
 
 

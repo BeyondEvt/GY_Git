@@ -1,8 +1,3 @@
-# from  PIL
-# import ImageColor
-# # print(ImageColor.getcolor('black', 'RGB'))
-# # main.py
-import MySQLdb
 import win32api
 from kivy.app import App
 from kivy.uix.floatlayout import FloatLayout
