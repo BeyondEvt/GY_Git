@@ -1,6 +1,7 @@
 # 该文件为Alphapose框架文件，通过调用摄像头，获取人体关节点数据，
 # 通过不同关节点数据实现不同的人体动作识别算法
 # 将被主程序“Main_kivy”文件所调用
+# “测试”注释
 import json
 import torch
 from torch.autograd import Variable
