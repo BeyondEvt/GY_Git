@@ -1,3 +1,8 @@
+# from  PIL
+# import ImageColor
+# # print(ImageColor.getcolor('black', 'RGB'))
+# # main.py
+# import MySQLdb
 import win32api
 from kivy.app import App
 from kivy.uix.floatlayout import FloatLayout
@@ -22,10 +27,12 @@ Window.size = (1200, 900)
 
 # ************************************************************************************
 from opt import opt
+
 from dataloader_webcam import WebcamLoader, DetectionLoader, DetectionProcessor, DataWriter, crop_from_dets, Mscoco
 from yolo.darknet import Darknet
 from yolo.util import write_results, dynamic_write_results
 from SPPE.src.main_fast_inference import *
+
 from SPPE.src.utils.img import im_to_torch
 import os
 import sys
@@ -42,9 +49,13 @@ import os
 # 该文件为程序主界面文件，界面开发采用了kivy框架
 # 结合了教练制定标准数据的功能和用户提取视频标准数据并开始人体识别的功能
 
+
+
+
 # 获取视频基础数据
 from MySql.connect_mysql import VIDEO_data2
 video_play_data = VIDEO_data2()
+
 
 video_id = video_play_data[0::3]
 video_name = video_play_data[1::3]
@@ -59,6 +70,8 @@ L = []  # 存放已执行函数
 list_father = []
 
 # give_standard(0, 6, 7, 0, 0, 0, np.pi / 6, 0, 0, False, 0.0, 5, ["", "减小两肩的高低距离"])
+
+
 # give_standard( 6, 0, 0, 0, 0, 0, np.pi/3, 0, 0, 0.0, 1115.0, ["减小左小腿的最大角度","","增大左小腿的最大角度",""])
 # give_standard( 8, 0, 0, 0, 0, 0, np.pi/3, 0, 0, 0.0, 1115.00,["减小右小腿的最大角度","","增大右小腿的最大角度",""])
 # give_standard(5, 0, 0, 0, 0, 0, np.pi/2, 0, np.pi/3, True, 5.0, 2110.0, ["减小左大腿的最大角度","1","增大左大腿的最大角度","2"])
@@ -83,6 +96,7 @@ class VideoPlayerApp(App):  ##实现App类的build()方法（继承自App类）
 
 
 class UserInput(TextInput):  # 一个基类为TextInput的类
+
 
     def __init__(self, **kwargs):
         super(UserInput, self).__init__(**kwargs)
@@ -111,9 +125,12 @@ class ExeMainWindow(App):  # app主窗口界面
                                    pos_hint={"x": 0.1, "top": 0.6}
                                    )
 
+
         self.layout.add_widget(self.start_button)
         self.start_button.bind(on_press=self.SelectVideo_window)
         return self.layout
+
+
 
 
     def Input_num_Window(self, button):  # 教练输入视频基础参数的的窗口
@@ -175,7 +192,7 @@ class ExeMainWindow(App):  # app主窗口界面
         closeButton.bind(on_press=popup.dismiss)
 
 
-    ## 用户选择视频的界面
+    # 用户选择视频的界面
     def SelectVideo_window(self, button):  # 教练输入视频基础参数的的窗口
         layout = FloatLayout()
 
@@ -266,7 +283,9 @@ class ExeMainWindow(App):  # app主窗口界面
             popup.open()
             closeButton.bind(on_press=popup.dismiss)  # 关闭按钮绑定关闭popup窗口的功能
 
+
         else:
+
             if self.num.text not in VIDEO_data_num:             # 对其进行查找
                 # 将视频基础参数存入数据库
                 insert_mysql3(self.num.text, self.Vname.text, self.Vtime.text)
@@ -318,33 +337,13 @@ class ExeMainWindow(App):  # app主窗口界面
                                           size_hint=(0.05, 0.05),
                                           pos_hint={"x": 0.82, "top": 0.9})
                 layout.add_widget(self.time_end)
-                # self.tips = UserInput(multiline=False,
-                #                     font_name='Font_Hanzi',
-                #                       size_hint=(0.7, 0.05),
-                #                       pos_hint={"x": 0.05, "top": 0.8})
-                # layout.add_widget(self.tips)
-                self.tip1 = UserInput(multiline=False,
+                self.tips = UserInput(multiline=False,
                                     font_name='Font_Hanzi',
                                       size_hint=(0.7, 0.05),
                                       pos_hint={"x": 0.05, "top": 0.8})
-                layout.add_widget(self.tip1)
-                self.tip2 = UserInput(multiline=False,
-                                    font_name='Font_Hanzi',
-                                      size_hint=(0.7, 0.05),
-                                      pos_hint={"x": 0.05, "top": 0.7})
-                layout.add_widget(self.tip2)
-                self.tip3 = UserInput(multiline=False,
-                                    font_name='Font_Hanzi',
-                                      size_hint=(0.7, 0.05),
-                                      pos_hint={"x": 0.05, "top": 0.6})
-                layout.add_widget(self.tip3)
-                self.tip4 = UserInput(multiline=False,
-                                    font_name='Font_Hanzi',
-                                      size_hint=(0.7, 0.05),
-                                      pos_hint={"x": 0.05, "top": 0.5})
-                layout.add_widget(self.tip4)
+                layout.add_widget(self.tips)
 
-                # 用于将视频数据存储到数据库的按钮
+
                 save_in_mysql_button = Button(text="保 存",
                                                    font_name='Font_Hanzi',
                                                    background_color=(148 / 155, 242 / 155, 249 / 155),
@@ -353,8 +352,8 @@ class ExeMainWindow(App):  # app主窗口界面
                                                    )
                 layout.add_widget(save_in_mysql_button)
                 save_in_mysql_button.bind(on_press=self.save_data_in_mysql)
-                # 清空填写存储视频数据的按钮
-                save_over_button = Button(text="清 空",
+
+                save_over_button = Button(text="结 束",
                                               font_name='Font_Hanzi',
                                               background_color=(148 / 155, 242 / 155, 249 / 155),
                                               size_hint=(0.05, 0.05),
@@ -363,11 +362,14 @@ class ExeMainWindow(App):  # app主窗口界面
                 layout.add_widget(save_over_button)
                 save_over_button.bind(on_press=self.save_over)
 
+
                 closeButton = Button(text="×",
                                      font_size = 21,
                                      background_color=[1, 0, 0, 1],
                                      size_hint = (0.05,0.05),
                                      pos_hint = {"x": 0.95, "top": 1})
+
+
                 layout.add_widget(closeButton)
                 popup = Popup(title="Save In Standard Data Window",
                               content=layout,
@@ -388,15 +390,11 @@ class ExeMainWindow(App):  # app主窗口界面
                 layout.add_widget(Label(text = "move", size_hint = (0.05, 0.05), pos_hint = {"x": 0.68, "top": 0.95}))
                 layout.add_widget(Label(text = "start", size_hint = (0.05, 0.05), pos_hint = {"x": 0.75, "top": 0.95}))
                 layout.add_widget(Label(text = "end", size_hint = (0.05, 0.05), pos_hint = {"x": 0.82, "top": 0.95}))
+                layout.add_widget(Label(text = "tips", size_hint = (0.05, 0.05), pos_hint = {"x": 0.05, "top": 0.85}))
                 layout.add_widget(Label(text = "line", size_hint = (0.05, 0.05), pos_hint = {"x": 0.05, "top": 0.95}))
                 layout.add_widget(Label(text = "line", size_hint = (0.05, 0.05), pos_hint = {"x": 0.05, "top": 0.95}))
-                # layout.add_widget(Label(text="tips", size_hint=(0.05, 0.05), pos_hint={"x": 0.05, "top": 0.85}))
-                layout.add_widget(Label(text="tip1(min-d)", size_hint=(0.05, 0.05), pos_hint={"x": 0.05, "top": 0.85}))
-                layout.add_widget(Label(text="tip2(max-u)", size_hint=(0.05, 0.05), pos_hint={"x": 0.05, "top": 0.75}))
-                layout.add_widget(Label(text="tip3(min-u)", size_hint=(0.05, 0.05), pos_hint={"x": 0.05, "top": 0.65}))
-                layout.add_widget(Label(text="tip4(max-d)", size_hint=(0.05, 0.05), pos_hint={"x": 0.05, "top": 0.55}))
 
-            else: # 若视频编号已存在则会弹窗提醒
+            else: # 若视频编号已存在
                 self.num.text = ''
                 self.Vtime.text = ''
                 self.Vname.text = ''
@@ -419,27 +417,13 @@ class ExeMainWindow(App):  # app主窗口界面
                 closeButton.bind(on_press=popup.dismiss)  # 关闭按钮绑定关闭popup窗口的功能
 
     def save_over(self,_):
-        # 该函数用于清空视频存储数据，方便再次填写存储
-        self.line.text = ''
-        self.pt1.text = ''
-        self.pt2.text = ''
-        self.line1.text = ''
-        self.line2.text = ''
-        self.min_angle_down.text = ''
-        self.max_angle_up.text = ''
-        self.min_angle_up.text = ''
-        self.max_angle_down.text = ''
-        self.line_is_move.text = ''
-        self.time_start.text = ''
-        self.time_end.text = ''
-        # self.tips.text = ''
-        self.tip1.text = ''
-        self.tip2.text = ''
-        self.tip3.text = ''
-        self.tip4.text = ''
+        self.num.text = ''
+        self.Vtime.text = ''
+        self.Vname.text = ''
+
+
 
     def save_data_in_mysql(self,_):
-        # 该函数用于保存视频数据并存入数据库
         if (self.num.text.strip() != '' or self.num.text is not None) and (
                 self.line.text.strip() != '' or self.line.text is not None)and (
                 self.pt1.text.strip() != '' or self.pt1.text is not None)and (
@@ -453,20 +437,28 @@ class ExeMainWindow(App):  # app主窗口界面
                 self.line_is_move.text.strip() != '' or self.line_is_move.text is not None)and (
                 self.time_start.text.strip() != '' or self.time_start.text is not None)and (
                 self.time_end.text.strip() != '' or self.time_end.text is not None)and (
-                # self.tips.text.strip() != '' or self.tips.text is not None):
-                self.tip1.text.strip() != '' ) and (
-                self.tip2.text.strip() != '' ):
+                self.tips.text.strip() != '' or self.tips.text is not None):
 
-                insert_mysql2(self.num.text, self.line.text, self.pt1.text, self.pt2.text, self.line1.text,
-                              self.line2.text,
-                              self.min_angle_down.text, self.max_angle_up.text, self.min_angle_up.text,
-                              self.max_angle_down.text,
-                              self.line_is_move.text, self.time_start.text, self.time_end.text, "{}-{}-{}-{}".format
-                              (self.tip1.text, self.tip2.text, self.tip3.text, self.tip4.text))
 
+            insert_mysql2(self.num.text, self.line.text,self.pt1.text, self.pt2.text, self.line1.text, self.line2.text,
+                self.min_angle_down.text, self.max_angle_up.text, self.min_angle_up.text, self.max_angle_down.text,
+                self.line_is_move.text, self.time_start.text, self.time_end.text, self.tips.text)
+            self.line.text=''
+            self.pt1.text=''
+            self.pt2.text=''
+            self.line1.text=''
+            self.line2.text=''
+            self.min_angle_down.text=''
+            self.max_angle_up.text=''
+            self.min_angle_up.text=''
+            self.max_angle_down.text=''
+            self.line_is_move.text=''
+            self.time_start.text=''
+            self.time_end.text=''
+            self.tips.text=''
 
     def webcam_start2(self, button):
-        # 该函数用于读取视频数据，并执行摄像头文件
+        #
         import json
 
         videoid = self.video_id.text
@@ -475,19 +467,18 @@ class ExeMainWindow(App):  # app主窗口界面
         # video_name = video_play_data[video_play_data.index(videoid) + 1 ]
         video_time = float(video_play_data[video_play_data.index(videoid) + 2 ])
 
-        # 提取数据库中的视频数据,并生成数据字典供系统纠错识别使用
+        # 生成数据字典
         data_dict = dict()
         data_sql=[]
         for i in range(len(data_sql_data)):
             if data_sql_data[i][0] == self.video_id.text:
                 data_sql.append(data_sql_data[i])
-        # print("这是data_sql",data_sql)
+        print("这是data_sql",data_sql)
         for i in range(len(data_sql)):
             index = str("%.1f" % (int(data_sql[i][-3])))
             if index not in data_dict:
                 data_dict[index] = []
             print("data_sql[i][1]",data_sql[i][1],type(data_sql[i][1]))
-            # 三个识别纠错函数类别区分
             if int(data_sql[i][1]) != 0:
                 data_dict[index].append(
                     [2, int(data_sql[i][1]), int(data_sql[i][2]), int(data_sql[i][3]), int(data_sql[i][4]),
@@ -496,6 +487,7 @@ class ExeMainWindow(App):  # app主窗口界面
                      bool(int(data_sql[i][10])),
                      float("%.1f" % (int(data_sql[i][12]))), data_sql[i][13].split(sep='-')])
 
+
             elif int(data_sql[i][1]) == 0 and data_sql[i][2] != 0 and data_sql[i][3] != 0:
                 data_dict[index].append(
                     [1, int(data_sql[i][1]), int(data_sql[i][2]), int(data_sql[i][3]), int(data_sql[i][4]),
@@ -503,7 +495,6 @@ class ExeMainWindow(App):  # app主窗口界面
                      float(data_sql[i][6]), float(data_sql[i][7]), float(data_sql[i][8]), float(data_sql[i][9]),
                      bool(int(data_sql[i][10])),
                      float("%.1f" % (int(data_sql[i][12]))), data_sql[i][13].split(sep='-')])
-
             elif int(data_sql[i][4]) != 0 and data_sql[i][5] != 0:
                 data_dict[index].append(
                     [3, int(data_sql[i][1]), int(data_sql[i][2]), int(data_sql[i][3]), int(data_sql[i][4]),
@@ -512,13 +503,13 @@ class ExeMainWindow(App):  # app主窗口界面
                      bool(int(data_sql[i][10])),
                      float("%.1f" % (int(data_sql[i][12]))), data_sql[i][13].split(sep='-')])
 
-        # print("这是data_dict", data_dict)
-        # 将视频数据写入json文件，供执行纠错识别函数时读取
+        print("这是data_dict", data_dict)
         with open("dict.json", "w") as f:
             json_dict = json.dumps([data_dict, video_file, video_time])
             f.write(json_dict)
-        # 开启另一个进程，运行Alphapose开启文件
+
         from subprocess import Popen, PIPE, STDOUT
+
         p = Popen([sys.executable, "webcam_demo.py"], stdout=PIPE, stdin=PIPE, stderr=STDOUT)
 
 if __name__ == '__main__':

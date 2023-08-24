@@ -1,7 +1,6 @@
 #coding=utf-8
 import pymysql # 导入连接Mysql的库
 # 连接数据库
-
 connection = pymysql.connect(
         host = '127.0.0.1',
         port = 3306,
@@ -9,14 +8,12 @@ connection = pymysql.connect(
         passwd = 'hb123456',
         db='ALphapose',)
 
+
 # # 通过获取到的数据库conection下的cursor()方法来创建游标操作数据库
 # cursor = connection.cursor() # 开始使用数据库
 # #cursor.execute("INSERT INTO `USER` (`USER_ID`,`PASSWARD`)VALUES('kangsiting', 666);")
 # connection.commit()
 
-"""
-这个函数用来获取数据库的用户数据
-"""
 def user_data():  # 该函数用于获取数据库的用户数据
         connection.ping(reconnect=True) # 若mysql连接失败就重新连接
         cursor = connection.cursor()  # 开始使用数据库
@@ -29,9 +26,6 @@ def user_data():  # 该函数用于获取数据库的用户数据
         connection.close()  # 关闭与数据库的连接
         return mysql_result
 
-"""
-这个函数用来获取视频的标准数据
-"""
 def VIDEO_data():  # 该函数用于获取视频的标准数据
         connection.ping(reconnect=True) # 若mysql连接失败就重新连接
         cursor = connection.cursor()  # 开始使用数据库
@@ -43,9 +37,7 @@ def VIDEO_data():  # 该函数用于获取视频的标准数据
         cursor.close()
         connection.close()  # 关闭与数据库的连接
         return mysql_result
-"""
-这个函数用来获取视频的基础数据
-"""
+
 def VIDEO_data2():  # 该函数用于获取视频的基础数据
         connection.ping(reconnect=True) # 若mysql连接失败就重新连接
         cursor = connection.cursor()  # 开始使用数据库
@@ -57,9 +49,10 @@ def VIDEO_data2():  # 该函数用于获取视频的基础数据
         cursor.close()
         connection.close()  # 关闭与数据库的连接
         return mysql_result
-"""
-这个函数用来存储用户信息
-"""
+#
+#
+#
+#
 # 存储用户信息
 def insert_mysql(register_username, register_password):
         connection.ping(reconnect=True) # 若mysql连接失败就重新连接
@@ -71,9 +64,7 @@ def insert_mysql(register_username, register_password):
         connection.commit()   # 在SQL语句都成功执行后，调用Connection的commit()方法提交事务
         cursor.close()
         connection.close()
-"""
-这个函数用来存储视频标准数据信息
-"""
+
 # 存储视频标准数据信息
 def insert_mysql2(num, line, pt1, pt2, line1, line2, min_angle_down, max_angle_up, min_angle_up,  max_angle_down, line_is_move, time_start, time_end, tips):
         connection.ping(reconnect=True) # 若mysql连接失败就重新连接
@@ -85,9 +76,7 @@ def insert_mysql2(num, line, pt1, pt2, line1, line2, min_angle_down, max_angle_u
         connection.commit()   # 在SQL语句都成功执行后，调用Connection的commit()方法提交事务
         cursor.close()
         connection.close()
-"""
-这个函数用来存储视频基础参数数据
-"""
+
 # 存储视频基础参数数据
 def insert_mysql3(num, Vname, Vtime):
         connection.ping(reconnect=True) # 若mysql连接失败就重新连接
