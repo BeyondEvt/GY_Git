@@ -53,7 +53,7 @@ class main_window(FloatLayout):
                                pos_hint={"x": 0.1, "top": 0.6}))
     # 用于前往"basic_video_window"页面
     def basic_video_window(self, *args):
-        self.root = basic_video_window()
+        self.root = basic_video_window(1, 2) # 此处1 2仅供参数传递测试使用，可删除
 
 class main_App(App):
     def __init__(self, **kwargs):

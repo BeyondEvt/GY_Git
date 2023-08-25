@@ -5,8 +5,13 @@ from kivy.uix.button import Button
 from kivy.uix.popup import Popup
 
 class basic_video_window(FloatLayout):
-    def __init__(self, **kwargs):
+    def __init__(self, text1=None, text2=None, **kwargs): # 设置两个参数text1，text2，默认为None
         super(basic_video_window, self).__init__(**kwargs)
+        "以下四行均为演示参数的传递而使用，可删除"
+        self.text1 = text1
+        self.text2 = text2
+        print(self.text1)
+        print(self.text2)
         # “视频编号”标签和输入框
         self.add_widget(Label(text="视 频 编 号",
                               font_name='Font_Hanzi',
