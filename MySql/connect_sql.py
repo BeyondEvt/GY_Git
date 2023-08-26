@@ -6,7 +6,7 @@ connection = pymysql.connect(
         port = 3306,
         user = 'root',
         passwd = 'hb123456',
-        db='ALphapose',)
+        db='ALphapose_byguan',)
 
 # # 通过获取到的数据库conection下的cursor()方法来创建游标操作数据库
 # cursor = connection.cursor() # 开始使用数据库
@@ -48,10 +48,19 @@ def VIDEO_data2():  # 该函数用于获取视频的基础数据
         cursor.close()
         connection.close()  # 关闭与数据库的连接
         return mysql_result
-#
-#
-#
-#
+
+def delete_VIDEO_data2(key):
+        connection.ping(reconnect=True)  # 若mysql连接失败就重新连接
+        cursor = connection.cursor()  # 开始使用数据库
+        cursor.execute("DELETE FROM `video_id` WHERE video_id.Vname = '%s';" % key)
+        connection.commit()  # 在SQL语句都成功执行后，调用Connection的commit()方法提交事务
+        mysql_result = cursor.fetchall()  # 获取数据库的数据，数据类型为一个个元组
+        mysql_result = sum(mysql_result, ())  # 将所有元组合成为一个大元组
+        cursor.close()
+        connection.close()  # 关闭与数据库的连接
+        return mysql_result
+
+
 # 存储用户信息
 def insert_mysql(register_username, register_password):
         connection.ping(reconnect=True) # 若mysql连接失败就重新连接
@@ -77,13 +86,13 @@ def insert_mysql2(num, line, pt1, pt2, line1, line2, min_angle_down, max_angle_u
         connection.close()
 
 # 存储视频基础参数数据
-def insert_mysql3(num, Vname, Vtime):
+def insert_mysql3(Vname, Vtime):
         connection.ping(reconnect=True) # 若mysql连接失败就重新连接
         cursor = connection.cursor()  # 开始使用数据库
         connection.commit()
         # 执行sql语句，向数据库中的表格写入用户数据
-        cursor.execute("INSERT INTO `VIDEO_ID` VALUES('{}','{}','{}')"
-                       .format(num, Vname, Vtime))
+        cursor.execute("INSERT INTO `VIDEO_ID` VALUES('{}','{}')"
+                       .format(Vname, Vtime))
         connection.commit()   # 在SQL语句都成功执行后，调用Connection的commit()方法提交事务
         cursor.close()
         connection.close()

@@ -41,7 +41,7 @@ class select_video_window(FloatLayout):
                               size_hint=(0.045, 0.05),
                               pos_hint={"x": 0.4, "top": 0.95}))
         # 获取video相关数据
-        from MySql.connect_mysql import VIDEO_data2
+        from MySql.connect_sql import VIDEO_data2
         video_play_data = VIDEO_data2()
         video_id = video_play_data[0::3]
         video_name = video_play_data[1::3]

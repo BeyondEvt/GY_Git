@@ -15,22 +15,8 @@ LabelBase.register(name='Font_Hanzi', fn_regular='kvcn.ttc')  # 导入字体文�
 Window.size = (900, 700)
 from opt import opt
 import sys
-# 获取视频基础数据
-from MySql.connect_mysql import VIDEO_data2
-video_play_data = VIDEO_data2()
-
-
-video_id = video_play_data[0::3]
-video_name = video_play_data[1::3]
-
 from dict_base import *
 
-args = opt
-args.dataset = 'coco'
-q = []  # (存放30帧实时数据)
-L = []  # 存放已执行函数
-
-list_father = []
 class main_window(FloatLayout):
     def __init__(self, **kwargs):
         super(main_window, self).__init__(**kwargs)
@@ -42,7 +28,7 @@ class main_window(FloatLayout):
                          background_color=[148 / 155, 242 / 155, 249 / 155],
                          size_hint=(0.17, 0.1),
                          pos_hint={"x": 0.1, "top": 0.8},
-                         on_press=self.basic_video_window))
+                         on_press=self.saved_video_window))
         # "选择视频"按钮
         self.add_widget(Button(text="选 择 视 频",
                                font_name='kvcn.ttc',
@@ -51,14 +37,14 @@ class main_window(FloatLayout):
                                size_hint=(0.17, 0.1),
                                pos_hint={"x": 0.1, "top": 0.6},
                                on_press=self.select_video_window))
-    # 用于前往"basic_video_window"页面
-    def basic_video_window(self, *args):
-        from indep_kivy_file2 import basic_video_window
-        self.root = basic_video_window(1, 2) # 此处1 2仅供参数传递测试使用，可删除
 
     def select_video_window(self, *args):
         from indep_kivy_file3 import select_video_window
         self.root = select_video_window()
+
+    def saved_video_window(self, *args):
+        from indep_kivy_file4 import saved_video_window
+        self.root = saved_video_window()
 
 class main_App(App):
     def __init__(self, **kwargs):
