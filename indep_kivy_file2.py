@@ -51,15 +51,15 @@ class basic_video_window(FloatLayout):
                                size_hint=(0.3, 0.2),
                                pos_hint={"x": 0.6, "top": 0.45}))
         # 显示弹窗
-        window = Popup(title="input the basic information of the video",
-                       content=self,
-                       size_hint=(None, None),
-                       size=(500, 300))
-        window.open()
+        self.window = Popup(title="input the basic information of the video",
+                            content=self,
+                            size_hint=(None, None),
+                            size=(500, 300))
+        self.window.open()
         # 右上角关闭页面按钮
         self.add_widget(Button(text="×",
                                font_size=21,
                                background_color=[1, 0, 0, 1],
                                size_hint=(0.05, 0.05),
                                pos_hint={"x": 0.95, "top": 1},
-                               on_press=window.dismiss))
+                               on_press=self.window.dismiss))
