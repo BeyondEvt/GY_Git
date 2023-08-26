@@ -3,11 +3,11 @@ from kivy.uix.button import Button
 from kivy.uix.popup import Popup
 from kivy.uix.textinput import TextInput
 from kivy.uix.gridlayout import GridLayout
+from indep_kivy_file2 import save_basic_data_window
 
-
-class saved_video_window(GridLayout):
-    def __init__(self):
-        super(saved_video_window, self).__init__()
+class basic_data_window(GridLayout):
+    def __init__(self, _, **kwargs):
+        super(basic_data_window, self).__init__(**kwargs)
         self.cols = 2
         self.row_force_default = True
         self.row_default_height = 40
@@ -57,28 +57,23 @@ class saved_video_window(GridLayout):
         self.add_widget(Button(text="删除",
                                font_name='Font_Hanzi',
                                background_color=[1, 0, 0, 1],
-                               )) # on_press还未设置
+                               on_press=lambda *args:self.delete(self.Vname2.text, *args))) # on_press还未设置
         self.add_widget(Button(text="新建",
                                font_name='Font_Hanzi',
                                background_color=[148 / 155, 242 / 155, 249 / 155],
-                               on_press=self.input_num_window))
+                               on_press=save_basic_data_window))
         self.add_widget(Button(text="刷新",
                                font_name='Font_Hanzi',
                                background_color=[148 / 155, 242 / 155, 249 / 155],
                                on_press=self.refresh))
 
-    # 用于前往"input_num_window"页面
-    def input_num_window(self, *args):
-        from indep_kivy_file2 import input_num_window
-        self.root = input_num_window()
-
     def delete(self, key, *args):
         from MySql.connect_sql import delete_VIDEO_data2
         print(key)
         delete_VIDEO_data2(key)
-        self.root = saved_video_window()
+        basic_data_window(None)
         self.window.dismiss()
 
     def refresh(self, *args):
-        self.root = saved_video_window()
+        basic_data_window(None)
         self.window.dismiss()

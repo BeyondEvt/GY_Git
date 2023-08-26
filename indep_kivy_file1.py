@@ -6,6 +6,8 @@ from kivy.uix.button import Button
 from kivy.uix.popup import Popup
 from kivy.app import App
 from kivy.core.text import LabelBase
+from indep_kivy_file3 import video_start_window
+from indep_kivy_file4 import basic_data_window
 from kivy.uix import widget
 from kivy.graphics import Color, Rectangle
 from kivy.uix.boxlayout import BoxLayout
@@ -28,7 +30,7 @@ class main_window(FloatLayout):
                          background_color=[148 / 155, 242 / 155, 249 / 155],
                          size_hint=(0.17, 0.1),
                          pos_hint={"x": 0.1, "top": 0.8},
-                         on_press=self.saved_video_window))
+                         on_press=basic_data_window))
         # "选择视频"按钮
         self.add_widget(Button(text="选 择 视 频",
                                font_name='kvcn.ttc',
@@ -36,15 +38,7 @@ class main_window(FloatLayout):
                                background_color=[148 / 155, 242 / 155, 249 / 155],
                                size_hint=(0.17, 0.1),
                                pos_hint={"x": 0.1, "top": 0.6},
-                               on_press=self.select_video_window))
-
-    def select_video_window(self, *args):
-        from indep_kivy_file3 import select_video_window
-        self.root = select_video_window()
-
-    def saved_video_window(self, *args):
-        from indep_kivy_file4 import saved_video_window
-        self.root = saved_video_window()
+                               on_press=video_start_window))
 
 class main_App(App):
     def __init__(self, **kwargs):

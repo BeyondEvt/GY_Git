@@ -4,9 +4,9 @@ from kivy.uix.textinput import TextInput
 from kivy.uix.button import Button
 from kivy.uix.popup import Popup
 
-class input_num_window(FloatLayout):
-    def __init__(self, **kwargs):
-        super(input_num_window, self).__init__(**kwargs)
+class save_basic_data_window(FloatLayout):
+    def __init__(self, _, **kwargs):
+        super(save_basic_data_window, self).__init__(**kwargs)
         # “视频名称”标签和输入框
         self.add_widget(Label(text="视 频 名 称",
                               font_name='Font_Hanzi',

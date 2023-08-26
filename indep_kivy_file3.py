@@ -4,9 +4,9 @@ from kivy.uix.textinput import TextInput
 from kivy.uix.button import Button
 from kivy.uix.popup import Popup
 
-class select_video_window(FloatLayout):
-    def __init__(self, **kwargs):
-        super(select_video_window, self).__init__(**kwargs)
+class video_start_window(FloatLayout):
+    def __init__(self, _, **kwargs):
+        super(video_start_window, self).__init__(**kwargs)
         # “请输入视频编号”标签和输入框
         self.add_widget(Label(text="请 输 入 视 频 编 号",
                               font_name='Font_Hanzi',
@@ -43,8 +43,8 @@ class select_video_window(FloatLayout):
         # 获取video相关数据
         from MySql.connect_sql import VIDEO_data2
         video_play_data = VIDEO_data2()
-        video_id = video_play_data[0::3]
-        video_name = video_play_data[1::3]
+        video_id = video_play_data[0::2]
+        video_name = video_play_data[1::2]
         # 罗列所有视频
         for i in range(len(video_id)):
             self.add_widget(Label(text=video_id[i],
