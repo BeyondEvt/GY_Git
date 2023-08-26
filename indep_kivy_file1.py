@@ -8,7 +8,6 @@ from kivy.app import App
 from kivy.core.text import LabelBase
 from kivy.uix import widget
 from kivy.graphics import Color, Rectangle
-from indep_kivy_file2 import basic_video_window
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.videoplayer import VideoPlayer  ##引入控件
 # 统一中文字体
@@ -50,10 +49,16 @@ class main_window(FloatLayout):
                                font_size=18,
                                background_color=[148 / 155, 242 / 155, 249 / 155],
                                size_hint=(0.17, 0.1),
-                               pos_hint={"x": 0.1, "top": 0.6}))
+                               pos_hint={"x": 0.1, "top": 0.6},
+                               on_press=self.select_video_window))
     # 用于前往"basic_video_window"页面
     def basic_video_window(self, *args):
+        from indep_kivy_file2 import basic_video_window
         self.root = basic_video_window(1, 2) # 此处1 2仅供参数传递测试使用，可删除
+
+    def select_video_window(self, *args):
+        from indep_kivy_file3 import select_video_window
+        self.root = select_video_window()
 
 class main_App(App):
     def __init__(self, **kwargs):
