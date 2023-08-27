@@ -6,8 +6,8 @@ from kivy.uix.button import Button
 from kivy.uix.popup import Popup
 from kivy.app import App
 from kivy.core.text import LabelBase
-from indep_kivy_file3 import video_start_window
 from indep_kivy_file4 import basic_data_window
+from indep_kivy_file3 import video_start_window
 from kivy.uix import widget
 from kivy.graphics import Color, Rectangle
 from kivy.uix.boxlayout import BoxLayout
